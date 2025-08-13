@@ -4,7 +4,6 @@ from config import settings
 
 # Используем URL из .env
 engine = create_async_engine(settings.DATABASE_URL, echo=True)
-
 AsyncSessionLocal = sessionmaker(
     bind=engine,
     class_=AsyncSession,

@@ -22,7 +22,7 @@ class OrderStatus(str, enum.Enum):
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     fullname = Column(String(70), index=True)
@@ -30,6 +30,7 @@ class User(Base):
     phone_number = Column(String(20), unique=True, index=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    password_hash = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), default=UserRole.user, nullable=False)
 
     # Связи
@@ -48,7 +49,7 @@ class WashStation(Base):
     address = Column(String(255))
     latitude = Column(Numeric(9, 6))
     longitude = Column(Numeric(9, 6))
-    user_id = Column(Integer, ForeignKey("user.id"))  # владелец мойки
+    user_id = Column(Integer, ForeignKey("users.id"))  # владелец мойки
 
     # Связи
     owner = relationship("User", back_populates="washstations")
@@ -91,7 +92,7 @@ class Order(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     wash_id = Column(Integer, ForeignKey("washstation.id"))
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     description = Column(Text)
@@ -109,7 +110,7 @@ class Rating(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     wash_id = Column(Integer, ForeignKey("washstation.id"))
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     star = Column(Integer)
     comment = Column(Text)
 
